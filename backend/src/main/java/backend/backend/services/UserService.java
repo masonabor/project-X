@@ -1,5 +1,6 @@
 package backend.backend.services;
 
+import backend.backend.HashPassword;
 import backend.backend.models.User;
 import backend.backend.repositories.UserRepository;
 import jakarta.xml.bind.ValidationException;
@@ -20,6 +21,7 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new ValidationException("Email is already in use");
         }
+        user.setPassword(new HashPassword().hash(user.getPassword()));
         return userRepository.save(user);
     }
 }

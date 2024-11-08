@@ -1,0 +1,107 @@
+main {
+    height: auto;
+    min-height: 65vh;
+    width: 100%;
+    margin: 5vw 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+
+form {
+    display: inline-block;
+    text-align: left;
+    padding: 20px;
+    height: auto;
+    width: 30vw;
+    margin: 0 0 50px 0;
+    border-radius: 10px;
+    background-color: darkgray;
+    box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+label {
+    font-family: Arial, sans-serif;
+    margin-bottom: 10px;
+    display: block;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="date"],
+input[type="file"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 20px;
+}
+
+.button {
+    display: inline-block;
+    background-color: #e60d2e;
+    border: none;
+    border-radius: 15px;
+    width: 100%;
+    height: 10%;
+    font-size: 24px;
+    color: white;
+    font-weight: bold;
+    margin-top: 18px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.button:hover {
+    transform: scale(1.05);
+    background-color: #ff4b5c;
+}
+
+form a {
+    text-decoration: none;
+    text-align: center;
+}
+
+@media (max-width: 435px) {
+    main {
+        min-height: 77vh;
+    }
+
+    form {
+        width: 280px;
+        margin: 0 20px;
+    }
+
+    label {
+        margin-bottom: 0;
+        font-size: 16px;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    input[type="date"],
+    input[type="file"],
+    select {
+        font-size: small;
+        margin-bottom: 10px;
+    }
+
+    option {
+
+    }
+
+    .button {
+        font-size: 18px;
+    }
+}
+

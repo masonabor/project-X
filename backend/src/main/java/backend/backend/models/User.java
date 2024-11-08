@@ -1,24 +1,39 @@
 package backend.backend.models;
 
 import jakarta.persistence.*;
-
 import java.util.Date;
 
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String username;
+    @Column(name = "password", length = 200, nullable = false)
     private String password;
+
+    @Column(name = "email", length = 50, nullable = false)
     private String email;
+
+    @Column(name = "phone", length = 50, nullable = false)
     private String phone;
+
+    @Column(name = "firstName", length = 50, nullable = false)
     private String firstName;
+
+    @Column(name = "lastName", length = 50, nullable = false)
     private String lastName;
+
+    @Column(name = "middleName", length = 50, nullable = false)
     private String middleName;
+
+    @Column(name = "date_of_birth")
+    @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
+
+    @Column(name = "gender", length = 50, nullable = false)
     private String gender;
 
     public long getId() {
@@ -27,14 +42,6 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {

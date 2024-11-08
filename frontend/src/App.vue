@@ -1,6 +1,6 @@
 <template>
-  <Registration/>
+  <RegistrationComponent/>
 </template>
 <script setup>
-import Registration from "@/components/Registration.vue"
+import RegistrationComponent from "@/components/UserRegistrationComponent.vue"
 </script>
