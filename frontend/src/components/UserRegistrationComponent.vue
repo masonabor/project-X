@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from "vue"
 import axios from "axios"
-import BaseLayout from "@/components/BaseLayout.vue";
+import router from "@/router/route"
+import { setUserSession } from "@/sessionHelper.js";
 
 const email = ref("")
 const password = ref("")
@@ -128,19 +129,22 @@ async function submitForm() {
 
   if (hasErrors.value) return
 
-  try {
-    await axios.post('/api/user/register', {
-      email: email.value,
-      password: password.value,
-      lastName: lastName.value,
-      firstName: firstName.value,
-      middleName: middleName.value,
-      dateOfBirth: dateOfBirth.value,
-      gender: gender.value,
-      phone: phone.value
-    });
-    alert("Успішна реєстрація!");
+  const user = {
+    email: email.value,
+    password: password.value,
+    lastName: lastName.value,
+    firstName: firstName.value,
+    middleName: middleName.value,
+    dateOfBirth: dateOfBirth.value,
+    gender: gender.value,
+    phone: phone.value
+  }
 
+  try {
+    await axios.post("/api/user/register", user);
+    alert("Успішна реєстрація!");
+    setUserSession(user, 2)
+    await router.push({name: "UserPage"})
     email.value = password.value = lastName.value = firstName.value = middleName.value = dateOfBirth.value = gender.value = phone.value = "";
   } catch (error) {
     console.error("Помилка при реєстрації:", error);
@@ -151,7 +155,6 @@ async function submitForm() {
 </script>
 
 <template>
-  <BaseLayout>
     <main>
       <form @submit.prevent="submitForm" class="inputs" novalidate>
 
@@ -218,7 +221,6 @@ async function submitForm() {
         </div>
       </form>
     </main>
-  </BaseLayout>
 </template>
 
 
