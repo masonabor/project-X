@@ -4,14 +4,11 @@
     </div>
 </template>
 <script>
-import { getUserSession} from "@/sessionHelper";
 
 export default {
 
   computed: {
-    user() {
-      return getUserSession()
-    }
+
   }
 }
 

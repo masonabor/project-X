@@ -1,8 +1,76 @@
+<template>
+    <main>
+      <form @submit.prevent="submitForm" class="inputs" novalidate>
+
+        <div class="input">
+          <label for="email">Email</label>
+          <input type="email" v-model="email" @input="validateEmail">
+          <span class="error-message" v-if="emailError">{{ emailError }}</span>
+        </div>
+
+        <div class="input">
+          <label for="password">Пароль</label>
+          <input type="password" minlength="5" v-model="password" @input="validatePassword">
+          <span class="error-message" v-if="passwordError">{{ passwordError }}</span>
+        </div>
+
+        <div class="input">
+          <label for="lastname">Прізвище</label>
+          <input type="text" minlength="3" v-model="lastName" @input="validateLastname">
+          <span class="error-message" v-if="lastnameError">{{ lastnameError }}</span>
+        </div>
+
+        <div class="input">
+          <label for="firstname">Ім'я</label>
+          <input type="text" minlength="3" v-model="firstName" @input="validateFirstname">
+          <span class="error-message" v-if="firstnameError">{{ firstnameError }}</span>
+        </div>
+
+        <div class="input">
+          <label for="middlename">По батькові</label>
+          <input type="text" v-model="middleName" @input="validateMiddlename">
+          <span class="error-message" v-if="middlenameError">{{ middlenameError }}</span>
+        </div>
+
+        <div class="input">
+          <label for="dateOfBirth">Дата народження</label>
+          <input type="date" id="dateOfBirth" v-model="dateOfBirth" @input="validateDateOfBirth">
+          <span class="error-message" v-if="dateOfBirthError">{{ dateOfBirthError }}</span>
+        </div>
+
+        <div class="input">
+          <label class="custom-radio">
+            Чоловіча
+            <input type="radio" v-model="gender" value="male" @change="validateGender">
+          </label>
+          <label class="custom-radio">
+            Жіноча
+            <input type="radio" v-model="gender" value="female" @change="validateGender">
+          </label>
+          <label class="custom-radio">
+            Інше
+            <input type="radio" v-model="gender" value="other" @change="validateGender">
+          </label>
+          <span class="error-message" v-if="genderError">{{ genderError }}</span>
+        </div>
+
+        <div class="input">
+          <label for="phone">Телефон</label>
+          <input type="text" id="phone" v-model="phone" placeholder="+380########" @input="validatePhone">
+          <span class="error-message" v-if="phoneError">{{ phoneError }}</span>
+        </div>
+
+        <div class="submit-container">
+          <button class="btn" type="submit">Зареєструватися</button>
+        </div>
+      </form>
+    </main>
+</template>
+
 <script setup>
 import { ref } from "vue"
 import axios from "axios"
 import router from "@/router/route"
-import { setUserSession } from "@/sessionHelper.js";
 
 const email = ref("")
 const password = ref("")
@@ -143,7 +211,7 @@ async function submitForm() {
   try {
     await axios.post("/api/user/register", user);
     alert("Успішна реєстрація!");
-    setUserSession(user, 2)
+    sessionStorage.setItem("user", JSON.stringify(user));
     await router.push({name: "UserPage"})
     email.value = password.value = lastName.value = firstName.value = middleName.value = dateOfBirth.value = gender.value = phone.value = "";
   } catch (error) {
@@ -153,74 +221,5 @@ async function submitForm() {
 }
 
 </script>
-
-<template>
-    <main>
-      <form @submit.prevent="submitForm" class="inputs" novalidate>
-
-        <div class="input">
-          <label for="email">Email</label>
-          <input type="email" v-model="email" @input="validateEmail">
-          <span class="error-message" v-if="emailError">{{ emailError }}</span>
-        </div>
-
-        <div class="input">
-          <label for="password">Пароль</label>
-          <input type="password" minlength="5" v-model="password" @input="validatePassword">
-          <span class="error-message" v-if="passwordError">{{ passwordError }}</span>
-        </div>
-
-        <div class="input">
-          <label for="lastname">Прізвище</label>
-          <input type="text" minlength="3" v-model="lastName" @input="validateLastname">
-          <span class="error-message" v-if="lastnameError">{{ lastnameError }}</span>
-        </div>
-
-        <div class="input">
-          <label for="firstname">Ім'я</label>
-          <input type="text" minlength="3" v-model="firstName" @input="validateFirstname">
-          <span class="error-message" v-if="firstnameError">{{ firstnameError }}</span>
-        </div>
-
-        <div class="input">
-          <label for="middlename">По батькові</label>
-          <input type="text" v-model="middleName" @input="validateMiddlename">
-          <span class="error-message" v-if="middlenameError">{{ middlenameError }}</span>
-        </div>
-
-        <div class="input">
-          <label for="dateOfBirth">Дата народження</label>
-          <input type="date" id="dateOfBirth" v-model="dateOfBirth" @input="validateDateOfBirth">
-          <span class="error-message" v-if="dateOfBirthError">{{ dateOfBirthError }}</span>
-        </div>
-
-        <div class="input">
-          <label class="custom-radio">
-            Чоловіча
-            <input type="radio" v-model="gender" value="male" @change="validateGender">
-          </label>
-          <label class="custom-radio">
-            Жіноча
-            <input type="radio" v-model="gender" value="female" @change="validateGender">
-          </label>
-          <label class="custom-radio">
-            Інше
-            <input type="radio" v-model="gender" value="other" @change="validateGender">
-          </label>
-          <span class="error-message" v-if="genderError">{{ genderError }}</span>
-        </div>
-
-        <div class="input">
-          <label for="phone">Телефон</label>
-          <input type="text" id="phone" v-model="phone" placeholder="+380########" @input="validatePhone">
-          <span class="error-message" v-if="phoneError">{{ phoneError }}</span>
-        </div>
-
-        <div class="submit-container">
-          <button class="btn" type="submit">Зареєструватися</button>
-        </div>
-      </form>
-    </main>
-</template>
 
 
