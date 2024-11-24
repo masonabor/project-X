@@ -42,13 +42,21 @@ public class JwtFilter extends OncePerRequestFilter {
             }
 
             if (username != null && jwtUtil.isTokenValid(token) && SecurityContextHolder.getContext().getAuthentication() == null) {
+                List<String> roles = jwtUtil.extractRole(token);
                 List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority(jwtUtil.extractRole(token)));
+                for (String role : roles) {
+                    authorities.add(new SimpleGrantedAuthority(role));
+                }
+                SecurityContextHolder.getContext().setAuthentication(
+                        new UsernamePasswordAuthenticationToken(username, null, authorities)
+                );
+
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
                         username,
                         null,
                         authorities
                 ));
+                System.out.println(roles);
             }
         }
         filterChain.doFilter(request, response);

@@ -1,6 +1,5 @@
 package backend.backend.services;
 
-import backend.backend.jwt.JwtUtil;
 import backend.backend.models.Role;
 import backend.backend.models.User;
 import backend.backend.repositories.RoleRepository;
@@ -10,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,7 +47,7 @@ public class UserService implements UserDetailsService {
         if (userRepository.findByUsername(user.getUsername()).isPresent() || userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("Username or email already exists!");
         }
-        Role userRole = roleRepository.findByRole("USER")
+        Role userRole = roleRepository.findByRole("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Default role USER not found"));
         user.setRole(userRole);
         return userRepository.save(user);
@@ -59,7 +57,7 @@ public class UserService implements UserDetailsService {
         if (userRepository.findByUsername(admin.getUsername()).isPresent() || userRepository.findByEmail(admin.getEmail()).isPresent()) {
             throw new RuntimeException("Username or email already exists!");
         }
-        Role adminRole = roleRepository.findByRole("ADMIN")
+        Role adminRole = roleRepository.findByRole("ROLE_ADMIN")
                 .orElseThrow(() -> new RuntimeException("Default role ADMIN not found"));
         admin.setRole(adminRole);
         return userRepository.save(admin);
@@ -69,7 +67,7 @@ public class UserService implements UserDetailsService {
         if (userRepository.findByUsername(coach.getUsername()).isPresent() || userRepository.findByEmail(coach.getEmail()).isPresent()) {
             throw new RuntimeException("Username or email already exists!");
         }
-        Role coachRole = roleRepository.findByRole("COACH")
+        Role coachRole = roleRepository.findByRole("ROLE_COACH")
                 .orElseThrow(() -> new RuntimeException("Default role COACH not found"));
         coach.setRole(coachRole);
         return userRepository.save(coach);

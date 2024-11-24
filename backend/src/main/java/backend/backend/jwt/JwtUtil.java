@@ -1,7 +1,5 @@
 package backend.backend.jwt;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.Claims;
@@ -25,8 +23,6 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         List<String> role = userDetails.getAuthorities().stream()
@@ -34,11 +30,6 @@ public class JwtUtil {
                 .toList();
 
         claims.put("role", role);
-//        try {
-//            claims.put("role", objectMapper.writeValueAsString(role));
-//        } catch (Exception e) {
-//            throw new RuntimeException("Error while serializing roles", e);
-//        }
         Date issuedDate = new Date();
         Date expirationDate = new Date(issuedDate.getTime() + 1000 * 60 * 60 * 24);
         return Jwts.builder()
@@ -54,9 +45,16 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String extractRole(String token) {
-        return extractAllClaims(token).get("role", String.class);
+    @SuppressWarnings("unchecked")
+    public List<String> extractRole(String token) {
+        Object roleClaim = extractAllClaims(token).get("role");
+        if (roleClaim instanceof List<?>) {
+            return (List<String>) roleClaim;
+        } else {
+            throw new RuntimeException("Invalid role claim type");
+        }
     }
+
 
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
