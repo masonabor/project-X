@@ -1,30 +1,51 @@
 package backend.backend.jwt;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.Claims;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 
-@Service
+@Component
 public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secret;
 
-    public String generateToken(String username) {
-        long expiration = 1000 * 60 * 60 * 24;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public String generateToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        List<String> role = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
+
+        claims.put("role", role);
+//        try {
+//            claims.put("role", objectMapper.writeValueAsString(role));
+//        } catch (Exception e) {
+//            throw new RuntimeException("Error while serializing roles", e);
+//        }
+        Date issuedDate = new Date();
+        Date expirationDate = new Date(issuedDate.getTime() + 1000 * 60 * 60 * 24);
         return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setClaims(claims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(issuedDate)
+                .setExpiration(expirationDate)
                 .signWith(getSecret(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -32,6 +53,11 @@ public class JwtUtil {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
+    public String extractRole(String token) {
+        return extractAllClaims(token).get("role", String.class);
+    }
+
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -70,8 +96,7 @@ public class JwtUtil {
     }
 
     private Key getSecret() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     private boolean isTokenExpired(String token) {

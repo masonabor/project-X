@@ -6,48 +6,74 @@ import backend.backend.models.User;
 import backend.backend.repositories.RoleRepository;
 import backend.backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    private PasswordEncoder passwordEncoder;
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
 
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
+    @Transactional
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
+                String.format("User %s not found", username)
+        ));
+        String role = user.getRole().getRole();
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(role));
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                authorities) {
+        };
     }
 
     public User registerUser(User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists!");
+        if (userRepository.findByUsername(user.getUsername()).isPresent() || userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Username or email already exists!");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         Role userRole = roleRepository.findByRole("USER")
                 .orElseThrow(() -> new RuntimeException("Default role USER not found"));
         user.setRole(userRole);
         return userRepository.save(user);
     }
 
-    public String authenticateUser(String username, String password) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+    public User registerAdmin(User admin) {
+        if (userRepository.findByUsername(admin.getUsername()).isPresent() || userRepository.findByEmail(admin.getEmail()).isPresent()) {
+            throw new RuntimeException("Username or email already exists!");
         }
-        return jwtUtil.generateToken(user.getUsername());
+        Role adminRole = roleRepository.findByRole("ADMIN")
+                .orElseThrow(() -> new RuntimeException("Default role ADMIN not found"));
+        admin.setRole(adminRole);
+        return userRepository.save(admin);
     }
+
+    public User registerCoach(User coach) {
+        if (userRepository.findByUsername(coach.getUsername()).isPresent() || userRepository.findByEmail(coach.getEmail()).isPresent()) {
+            throw new RuntimeException("Username or email already exists!");
+        }
+        Role coachRole = roleRepository.findByRole("COACH")
+                .orElseThrow(() -> new RuntimeException("Default role COACH not found"));
+        coach.setRole(coachRole);
+        return userRepository.save(coach);
+    }
+
 }
 
