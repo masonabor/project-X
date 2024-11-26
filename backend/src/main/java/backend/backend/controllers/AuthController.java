@@ -30,22 +30,22 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User registeredUser = userService.registerUser(user);
-        registeredUser.setPassword(passwordEncoder.encode(user.getPassword()));
         return ResponseEntity.ok(registeredUser);
     }
 
     @PostMapping("/registerAdmin")
     public ResponseEntity<?> registerAdmin(@RequestBody User admin) {
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         User registeredAdmin = userService.registerAdmin(admin);
-        registeredAdmin.setPassword(passwordEncoder.encode(admin.getPassword()));
         return ResponseEntity.ok(registeredAdmin);
     }
 
     @PostMapping("/registerCoach")
     public ResponseEntity<?> registerCoach(@RequestBody User coach) {
+        coach.setPassword(passwordEncoder.encode(coach.getPassword()));
         User registeredCoach = userService.registerCoach(coach);
-        registeredCoach.setPassword(passwordEncoder.encode(coach.getPassword()));
         return ResponseEntity.ok(registeredCoach);
     }
 
