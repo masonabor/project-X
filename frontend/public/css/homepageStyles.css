@@ -1,0 +1,294 @@
+
+
+/* Main Video Section ---------------------------------- start */
+video {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+}
+/* Main Video Section ---------------------------------- end */
+
+/* Our Clients Section --------------------------------- start */
+.our-clients-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Вертикальне вирівнювання по центру */
+    margin: 30px 0;
+    width: 100%;
+}
+
+.our-clients__title {
+    margin-bottom: 55px;
+    text-align: center;
+}
+
+.our-clients__text {
+    font-weight: 100;
+    font-size: 1.3vw;
+    line-height: 95.52%;
+    text-align: center;
+    margin-bottom: 40px;
+    width: 98vw;
+    box-sizing: border-box; /* робить шоб був правильний облік відступів у ширині */
+    padding: 0 170px 0 170px;
+}
+
+.our-clients-photos {
+    display: flex;
+    justify-content: space-around; /* This will space the images evenly */
+    align-items: center;
+    width: 100%;
+}
+
+.our-clients-photos img {
+    width: 20vw;
+    height: 25vw;
+    max-width: 430px;
+    object-fit: cover; /* Зберігає пропорції зображень, при цьому обрізаючи їх, якщо вони не підходять */
+    border-radius: 15px; /* Опціонально: додає трохи закруглені кути */
+    box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.4);
+}
+/* Our Clients Section --------------------------------- end */
+
+/* Our Services Section -------------------------------- start */
+#our-services {
+    min-height: 60vh;
+    background-color: black;
+    padding: 100px 170px;
+}
+
+.swiper-wrapper-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the slider and buttons */
+    position: relative;
+}
+
+.swiper-container {
+    width: 30vw; /* Adjust the width as needed */
+    max-width: 800px; /* You can limit the width */
+    margin: 0 auto; /* Center the slider */
+    overflow: hidden;
+    padding-left: 15px;
+}
+
+.swiper-navigation {
+    display: flex;
+    justify-content: space-between;
+    width: 100%; /* Make the buttons span the full width */
+    max-width: 800px; /* Same as slider */
+    margin-top: 10px;
+}
+
+.swiper-button-next, .swiper-button-prev {
+    color: white; /* Ensure the buttons are visible */
+    font-size: 24px; /* Adjust size if needed */
+    cursor: pointer;
+}
+
+.swiper-button-next {
+    right: 0;
+}
+
+.swiper-button-prev {
+    left: 0;
+}
+
+.swiper-slide h3 {
+    color: white;
+    font-size: 2.3vw;
+}
+
+.swiper-slide p {
+    color: white;
+    font-size: 1.3vw;
+}
+
+.swiper-slide img {
+    width: 30vw;
+    height: 25vw;
+    object-fit: cover;
+}
+/* Our Services Section -------------------------------- end */
+
+/* About Us Section ------------------------------------ start */
+#about-us {
+    margin-bottom: 100px;
+    margin-top: 100px;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    display: flex;
+}
+
+#description {
+    flex: 1;
+}
+
+h2 {
+    font-size: 1.3vw;
+    color: dimgray;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.3vw;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+#description p {
+    margin-top: 20px;
+    font-size: 1.3vw;
+    line-height: 1.6;
+}
+
+.red-button {
+    display: inline-block;
+    background-color: #e60d2e;
+    border: none;
+    border-radius: 15px;
+    width: 50%;
+    height: 8%;
+    font-size: 28px;
+    color: white;
+    font-weight: bold;
+    margin-top: 18px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.red-button:hover {
+    transform: scale(1.1); /* збільшує кнопочку */
+    background-color: #ff4b5c; /* трішки світлішим стає */
+}
+
+#map {
+    display: flex;
+    justify-content: center;
+}
+
+#map img {
+    align-self: center;
+    width: 45vw;
+}
+/* About Us Section ------------------------------------ end */
+
+/* adaptive -------------------------------------------- start */
+
+@media (max-width: 435px) {
+    /* Header */
+    .logo-and-icon {
+        flex-direction: row; /* Розташування в рядок */
+        align-items: center; /* Вирівнюємо елементи по центру вертикально */
+    }
+
+    .logo-link {
+        width: 200px;
+    }
+
+    .logo {
+
+        max-width: 100%;
+        height: auto;
+        width: auto;
+ 
+    }
+
+
+    /* Main Video Section */
+    video {
+        max-height: 300px;
+    }
+
+    /* Our Clients Section */
+    .our-clients-container {
+        height: auto; /* Висота буде автоматично підлаштовуватися */
+        padding: 0 10px; /* Зменшення відступів */
+    }
+
+    .our-clients__text {
+        font-size: 16px;
+        padding: 0 20px; /* Зменшення внутрішнього відступу */
+    }
+
+    .our-clients-photos {
+        display: flex;
+        flex-wrap: wrap; /* Додаємо можливість переносу рядків */
+        justify-content: space-between; /* Додаємо простір між зображеннями */
+    }
+
+    .our-clients-photos img {
+        width: 48%; /* Задаємо ширину для двох зображень в ряд */
+        height: 200px; /* Зменшення зображень */
+        margin-bottom: 10px; /* Відступ між рядками зображень */
+    }
+
+    /* Our Services Section */
+    #our-services {
+        padding: 50px 10px; /* Зменшення внутрішніх відступів */
+    }
+
+    .swiper-wrapper-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center the slider and buttons */
+        position: relative;
+    }
+
+    .swiper-container {
+        width: 70%;
+        max-width: 400px; /* Зменшити ширину слайдера */
+        overflow: hidden;
+    }
+
+    .swiper-slide h3 {
+        color: white;
+        font-size: 24px;
+    }
+
+    .swiper-slide p {
+        color: white;
+        font-size: 18px;
+    }
+
+    /* About Us Section */
+    #about-us {
+        display: flex;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        flex-wrap: wrap;
+    }
+
+    #description {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 36px; /* Зменшити заголовки */
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    #description p {
+        font-size: 16px; /* Зменшити розмір тексту */
+    }
+
+    .red-button {
+        width: 90%;
+        height: 50px; /* Зменшити кнопки */
+        font-size: 18px;
+    }
+
+    .container {
+        flex-direction: column;
+    }
+}
+
