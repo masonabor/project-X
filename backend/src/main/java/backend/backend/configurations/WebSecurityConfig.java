@@ -30,6 +30,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/auth/register").permitAll()
                         .requestMatchers("/auth/registerAdmin").hasRole("ADMIN")
                         .requestMatchers("/auth/registerCoach").hasRole("ADMIN")
+                        .requestMatchers("/admin/*").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

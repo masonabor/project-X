@@ -54,7 +54,6 @@ public class JwtFilter extends OncePerRequestFilter {
                         null,
                         authorities
                 ));
-                System.out.println(roles);
             }
         }
         filterChain.doFilter(request, response);

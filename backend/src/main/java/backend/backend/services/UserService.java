@@ -73,5 +73,9 @@ public class UserService implements UserDetailsService {
         return userRepository.save(coach);
     }
 
+    public Role getRole(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Username not found"));
+        return user.getRole();
+    }
 }
 

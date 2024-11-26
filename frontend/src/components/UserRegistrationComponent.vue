@@ -3,6 +3,11 @@
       <form @submit.prevent="submitForm" class="inputs" novalidate>
 
         <div class="input">
+          <label for="username">Username</label>
+          <input type="text" v-model="username" @input="validateUsername">
+          <span class="error-message" v-if="usernameError">{{ usernameError }}</span>
+        </div>
+        <div class="input">
           <label for="email">Email</label>
           <input type="email" v-model="email" @input="validateEmail">
           <span class="error-message" v-if="emailError">{{ emailError }}</span>
@@ -39,18 +44,12 @@
         </div>
 
         <div class="input">
-          <label class="custom-radio">
-            Чоловіча
-            <input type="radio" v-model="gender" value="male" @change="validateGender">
-          </label>
-          <label class="custom-radio">
-            Жіноча
-            <input type="radio" v-model="gender" value="female" @change="validateGender">
-          </label>
-          <label class="custom-radio">
-            Інше
-            <input type="radio" v-model="gender" value="other" @change="validateGender">
-          </label>
+          <label for="gender">Стать</label>
+          <select v-model="gender">
+            <option v-for="(option, index) in genders" :key="index" :value="option">
+              {{ option }}
+            </option>
+          </select>
           <span class="error-message" v-if="genderError">{{ genderError }}</span>
         </div>
 
@@ -60,18 +59,33 @@
           <span class="error-message" v-if="phoneError">{{ phoneError }}</span>
         </div>
 
+        <div class="input" v-if="isAdmin">
+          <label for="role">Роль користувача (для адміністраторів)</label>
+          <select v-model="role">
+            <option v-for="(role, index) in roles" :key="index" :value="role">
+              {{ role }}
+            </option>
+          </select>
+        </div>
+
         <div class="submit-container">
           <button class="btn" type="submit">Зареєструватися</button>
+          <button class="btn" @click="toLoginPage">Увійти</button>
         </div>
+
       </form>
     </main>
 </template>
 
 <script setup>
-import { ref } from "vue"
+import {onMounted, ref} from "vue"
 import axios from "axios"
 import router from "@/router/route"
 
+const roles = ref(["Користувач", "Адміністратор", "Тренер"])
+const genders = ref(["Чоловік", "Жінка", "Інше"])
+
+const username = ref("")
 const email = ref("")
 const password = ref("")
 const lastName = ref("")
@@ -80,7 +94,9 @@ const middleName = ref("")
 const dateOfBirth = ref("")
 const gender = ref("")
 const phone = ref("")
+const role = ref("");
 
+const usernameError = ref('')
 const emailError = ref("")
 const passwordError = ref("")
 const lastnameError = ref("")
@@ -91,8 +107,15 @@ const genderError = ref("")
 const phoneError = ref("")
 
 const hasErrors = ref(false)
-
 const textRegex = /[^a-zA-ZА-Яа-яЁёЇїІіЄєҐґ]/
+
+const token = ref("")
+const isAdmin = ref(false)
+
+onMounted(async () => {
+  token.value = await getToken()
+  isAdmin.value = await isUserAdmin(token.value)
+})
 
 function validateEmail() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -110,6 +133,14 @@ function validatePassword() {
   passwordError.value = ""
   if (!password.value || password.value.length < 5) {
     passwordError.value = "Пароль повинен містити принаймні 5 символів";
+    hasErrors.value = true
+  }
+}
+
+function validateUsername() {
+  usernameError.value = ""
+  if (!username.value || username.value.length < 5) {
+    usernameError.value = "Введіть юзернейм"
     hasErrors.value = true
   }
 }
@@ -162,7 +193,7 @@ function validateDateOfBirth() {
 
 function validateGender() {
   genderError.value = ""
-  const validGenders = ["male", "female", "other"]
+  const validGenders = ["Чоловік", "Жінка", "Інше"]
   if (!validGenders.includes(gender.value)) {
     genderError.value = "Оберіть стать"
     hasErrors.value = true
@@ -194,10 +225,12 @@ async function submitForm() {
   validateDateOfBirth()
   validateGender()
   validatePhone()
+  validateUsername()
 
   if (hasErrors.value) return
 
   const user = {
+    username: username.value,
     email: email.value,
     password: password.value,
     lastName: lastName.value,
@@ -208,16 +241,54 @@ async function submitForm() {
     phone: phone.value
   }
 
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${token.value}`
+    }
+  }
+
   try {
-    await axios.post("/api/user/register", user);
+    if (role.value === roles.value[0]) {
+      const response = await axios.post("/api/auth/register", user)
+      sessionStorage.setItem("token", response.data.token)
+      alert("Успішна реєстрація!");
+      await router.push({name: "UserPage"})
+    } else if (isAdmin.value && role.value === roles.value[1]) {
+      await axios.post("/api/auth/registerAdmin", user, headers)
+    } else if (isAdmin.value && role.value === roles.value[2]) {
+      await axios.post("/api/auth/registerCoach", user, headers)
+    }
+
     alert("Успішна реєстрація!");
-    sessionStorage.setItem("user", JSON.stringify(user));
-    await router.push({name: "UserPage"})
+
     email.value = password.value = lastName.value = firstName.value = middleName.value = dateOfBirth.value = gender.value = phone.value = "";
   } catch (error) {
-    console.error("Помилка при реєстрації:", error);
     alert("Помилка при реєстрації");
   }
+}
+
+async function getToken() {
+  return sessionStorage.getItem("token")
+}
+
+async function isUserAdmin(token) {
+  try {
+    const response = await axios.get(`/api/admin/isAdmin`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    if (response.status === 200) {
+      return response.data
+    }
+  } catch (e) {
+    console.log("Ви не є адміністратором", e)
+    return false;
+  }
+}
+
+function toLoginPage() {
+  router.push("/login")
 }
 
 </script>

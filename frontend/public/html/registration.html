@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="authors" content="Мартинюк Юрій, Маляревич Анжела"/>
+    <meta name="description" content="Веб-сайт спортивного залу СпортЛайф"/>
+    <title>Реєстрація</title>
+    <link rel="stylesheet" href="/frontend/public/css/authorizationAndRegistrationStyles.css">
+    <link rel="stylesheet" href="/frontend/public/css/hoverFooter.css">
+    <link rel="stylesheet" href="/frontend/public/css/registration.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <link rel="icon" href="/frontend/public/img/Trenbolone.jpeg"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="/frontend/public/scripts/registration.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="mobileHeader">
+    <div class="logo-and-icon">
+      <a class="logo-link" href="homepage.html">
+        <img class="logo" src="/frontend/public/img/tren.jpg" alt="tren">
+      </a>
+
+      <div class="icon-container">
+        <img src="/frontend/public/img/bicycle.png" alt="bicycle">
+      </div>
+
+    </div>
+    <div class="dropdown">
+      <div class="dropdown-child">
+        <a href="homepage.html">Головна</a>
+        <a href="/frontend/public/html/authorization.html">Авторизація</a>
+    </div>
+      <div class="hamburger-icon">
+        <button class="hamburger">☰</button>
+      </div>
+    </div>
+  </div>
+
+</header>
+
+<main>
+  <form id="registrationForm" method="post" class="inputs" novalidate>
+    <div class="input">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+      <span class="error-message" id="emailError"></span>
+    </div>
+
+    <div class="input">
+      <label for="password">Пароль</label>
+      <input type="password" id="password" name="password" minlength="5">
+      <span class="error-message" id="passwordError"></span>
+    </div>
+
+    <div class="input">
+      <label for="lastname">Прізвище</label>
+      <input type="text" id="lastname" name="lastname"  minlength="3">
+      <span class="error-message" id="lastnameError"></span>
+    </div>
+
+    <div class="input">
+      <label for="firstname">Ім'я</label>
+      <input type="text" id="firstname" name="firstname" required minlength="3">
+      <span class="error-message" id="firstnameError"></span>
+    </div>
+
+    <div class="input">
+      <label for="middlename">По батькові</label>
+      <input type="text" id="middlename" name="middlename">
+      <span class="error-message" id="middlenameError"></span>
+    </div>
+
+    <div class="input">
+      <label for="dateOfBirth">Дата народження</label>
+      <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+      <span class="error-message" id="dateOfBirthError"></span>
+    </div>
+
+    <div class="input">
+      <label class="custom-radio">
+        Чоловіча
+        <input type="radio" id="male" name="gender" value="male" required>
+      </label>
+      <label class="custom-radio">
+        Жіноча
+        <input type="radio" id="female" name="gender" value="female" required>
+      </label>
+      <label class="custom-radio">
+        Інше
+        <input type="radio" id="other" name="gender" value="other" required>
+      </label>
+      <span class="error-message" id="genderError"></span><br>
+    </div>
+
+    <div class="input">
+      <label for="phone">Телефон</label>
+      <input type="text" id="phone" name="phone" required>
+      <span class="error-message" id="phoneError"></span>
+    </div>
+
+    <div class="submit-container">
+      <button class="btn" type="submit">Зареєструватися</button>
+    </div>
+  </form>
+  <div class="table-container">
+    <table id="dataTable">
+      <thead>
+        <tr>
+          <th>Вибір</th>
+          <th>Ім'я</th>
+          <th>Прізвище</th>
+          <th>Email</th>
+          <th>Телефон</th>
+          <th>Стать</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="btn-wrapper">
+    <button class="btn" id="deleteRows">Видалити вибрані</button>
+    <button class="btn" id="duplicateRows">Дублювати вибрані</button>
+  </div>
+</main>
+
+<footer>
+
+  <div class="footer-content">
+    <p>Будьте з нами на зв'язку</p>
+    <div class="footer-icons">
+      <a href="tel:+380123456789" class="icon-link" title="Подзвонити">
+        <i class="fas fa-phone"></i>
+      </a>
+      <a href="mailto:info@sportlife.com" class="icon-link" title="Відправити Email">
+        <i class="fas fa-envelope"></i>
+      </a>
+      <a href="https://t.me/yourtelegram" class="icon-link" title="Чат у Telegram">
+        <i class="fab fa-telegram"></i>
+      </a>
+      <a href="https://wa.me/380123456789" class="icon-link" title="Чат у WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+      <a href="viber://chat?number=%2B380123456789" class="icon-link" title="Чат у Viber">
+        <i class="fab fa-viber"></i>
+      </a>
+
+    </div>
+  </div>
+  <div class="copyright">© 2007–2024 Group of companies TREN</div>
+</footer>
+
+
+</body>
+</html>
