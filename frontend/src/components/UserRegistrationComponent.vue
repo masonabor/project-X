@@ -252,7 +252,7 @@ async function submitForm() {
       const response = await axios.post("/api/auth/register", user)
       sessionStorage.setItem("token", response.data.token)
       alert("Успішна реєстрація!");
-      await router.push({name: "UserPage"})
+      await router.push("/login")
     } else if (isAdmin.value && role.value === roles.value[1] && !hasErrors.value) {
       await axios.post("/api/auth/registerAdmin", user, headers)
     } else if (isAdmin.value && role.value === roles.value[2] && !hasErrors.value) {
@@ -263,8 +263,6 @@ async function submitForm() {
   } catch (error) {
     alert("Помилка при реєстрації");
   }
-
-  alert("Успішна реєстрація!");
 }
 
 async function getToken() {

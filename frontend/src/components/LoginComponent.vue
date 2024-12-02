@@ -14,10 +14,13 @@
 <script setup>
 import {ref} from "vue";
 import axios, {HttpStatusCode} from "axios";
+import router from "@/router/route"
+
 
 const usernameOrEmail = ref("")
 const password = ref("")
 const message = ref()
+const token = ref("")
 
 async function login() {
 
@@ -33,9 +36,13 @@ async function login() {
   try {
     const response = await axios.post("/api/auth/login", loginData)
     if (response.status === 200) {
-      const token = response.data.token;
-      sessionStorage.setItem("token", token)
+      token.value = response.data.token;
+      sessionStorage.setItem("token", token.value)
     }
+    if (!token.value) {
+      message.value = "Ви не є зареєстровані"
+    }
+    await router.push("/userPage")
   } catch (e) {
     throw HttpStatusCode.Unauthorized
   }
