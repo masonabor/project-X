@@ -2,7 +2,7 @@ package backend.backend.controllers;
 
 import backend.backend.dtos.LoginRequest;
 import backend.backend.dtos.LoginResponse;
-import backend.backend.jwt.JwtError;
+import backend.backend.exceptions.JwtError;
 import backend.backend.jwt.JwtUtil;
 import backend.backend.models.User;
 import backend.backend.services.UserService;

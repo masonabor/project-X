@@ -248,23 +248,23 @@ async function submitForm() {
   }
 
   try {
-    if (role.value === roles.value[0]) {
+    if (role.value === roles.value[0] && !hasErrors.value) {
       const response = await axios.post("/api/auth/register", user)
       sessionStorage.setItem("token", response.data.token)
       alert("Успішна реєстрація!");
       await router.push({name: "UserPage"})
-    } else if (isAdmin.value && role.value === roles.value[1]) {
+    } else if (isAdmin.value && role.value === roles.value[1] && !hasErrors.value) {
       await axios.post("/api/auth/registerAdmin", user, headers)
-    } else if (isAdmin.value && role.value === roles.value[2]) {
+    } else if (isAdmin.value && role.value === roles.value[2] && !hasErrors.value) {
       await axios.post("/api/auth/registerCoach", user, headers)
     }
-
-    alert("Успішна реєстрація!");
 
     email.value = password.value = lastName.value = firstName.value = middleName.value = dateOfBirth.value = gender.value = phone.value = "";
   } catch (error) {
     alert("Помилка при реєстрації");
   }
+
+  alert("Успішна реєстрація!");
 }
 
 async function getToken() {
@@ -272,6 +272,11 @@ async function getToken() {
 }
 
 async function isUserAdmin(token) {
+
+  if (!token) {
+    return false;
+  }
+
   try {
     const response = await axios.get(`/api/admin/isAdmin`, {
       headers: {

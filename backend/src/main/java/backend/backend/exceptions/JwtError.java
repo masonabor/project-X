@@ -1,4 +1,4 @@
-package backend.backend.jwt;
+package backend.backend.exceptions;
 
 import lombok.Data;
 
