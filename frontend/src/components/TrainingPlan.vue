@@ -8,7 +8,7 @@
         <select v-model="selectedCoach" required>
           <option value="" disabled>Виберіть тренера</option>
           <option v-for="coach in coaches" :key="coach.id" :value="coach.id">
-            {{ coach.name }}
+            {{ coach.lastName }} {{ coach.firstName}}
           </option>
         </select>
       </div>
@@ -97,8 +97,12 @@ export default {
         }
 
         await axios.post(
-            `/api/trainingPlans/createTrainingPlan?coachId=${selectedCoach.value}`,
-            validSchedule,
+            `/api/trainingPlans/createTrainingPlan`,
+
+            {
+              coachId: selectedCoach.value,
+              schedules: validSchedule
+            },
             {
               headers: {
                 Authorization: `Bearer ${sessionStorage.getItem('token')}`,
