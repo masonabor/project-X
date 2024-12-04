@@ -33,6 +33,5 @@ public class ScheduleService {
         scheduleDTO.setStartTime(schedule.getStartTime());
         scheduleDTO.setEndTime(schedule.getEndTime());
         return scheduleDTO;
-
     }
 }
