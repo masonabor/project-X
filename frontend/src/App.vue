@@ -1,7 +1,7 @@
 <script setup>
 
-import logoImage from "@/img/tren.jpg";
-import bicycleImage from "@/img/bicycle.png";
+import logoImage from "@/public/img/tren.jpg";
+import bicycleImage from "@/public/img/bicycle.png";
 </script>
 
 <template>
@@ -19,8 +19,8 @@ import bicycleImage from "@/img/bicycle.png";
         </div>
         <div class="dropdown">
           <div class="dropdown-child">
-            <a href="">Головна</a>
-            <a href="">Авторизація</a>
+            <router-link to="/">Головна</router-link>
+            <router-link to="/login">Авторизація</router-link>
             <a href="">Калькулятор</a>
             <a href="">Питання та відповіді</a>
           </div>
@@ -59,6 +59,6 @@ import bicycleImage from "@/img/bicycle.png";
   </div>
 </template>
 
-<style src="@/css/registration.css"></style>
-<style src="@/css/hoverFooter.css"></style>
-<style src="@/css/authorizationAndRegistrationStyles.css"></style>
+<style src="@/public/css/registration.css"></style>
+<style src="@/public/css/hoverFooter.css"></style>
+<style src="@/public/css/authorizationAndRegistrationStyles.css"></style>

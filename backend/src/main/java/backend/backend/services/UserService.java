@@ -1,8 +1,9 @@
 package backend.backend.services;
 
-import backend.backend.dtos.CoachDTO;
-import backend.backend.dtos.UserDTO;
+import backend.backend.dtos.*;
 import backend.backend.models.Role;
+import backend.backend.models.Schedule;
+import backend.backend.models.TrainingPlan;
 import backend.backend.models.User;
 import backend.backend.repositories.RoleRepository;
 import backend.backend.repositories.UserRepository;
@@ -27,6 +28,7 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final AccountService accountService;
     private final TrainingPlanService trainingPlanService;
+    private final ScheduleService scheduleService;
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -39,6 +41,10 @@ public class UserService implements UserDetailsService {
 
     public List<User> findAllByRole(String role) {
         return userRepository.findAllByRole_Role(role);
+    }
+
+    public User findByTrainingPlan(TrainingPlan trainingPlan) {
+        return userRepository.findByTrainingPlan(trainingPlan).orElse(null);
     }
 
     @Transactional
@@ -119,6 +125,42 @@ public class UserService implements UserDetailsService {
         return findAllByRole("ROLE_COACH").stream()
                 .map(user -> new CoachDTO(user.getId(), user.getLastName(), user.getFirstName()))
                 .collect(Collectors.toList());
+    }
+
+    public ClientsResponse toClientsResponse(TrainingPlan trainingPlan) {
+
+        List<Schedule> schedules = scheduleService.findAllByTrainingPlan(trainingPlan);
+
+        List<ScheduleDTO> schedulesDto = schedules
+                .stream()
+                .map(schedule -> {
+                        ScheduleDTO scheduleDTO = new ScheduleDTO();
+                        scheduleDTO.setStartTime(schedule.getStartTime());
+                        scheduleDTO.setEndTime(schedule.getEndTime());
+                        scheduleDTO.setDayOfWeek(schedule.getDayOfWeek());
+                        return scheduleDTO;
+                })
+                .toList();
+
+        ClientsResponse.TrainingPlanDTO trainingPlanDTO = new ClientsResponse.TrainingPlanDTO();
+        trainingPlanDTO.setSchedules(schedulesDto);
+
+        ClientsResponse clientsResponse = new ClientsResponse();
+        User client = findByTrainingPlan(trainingPlan);
+
+        if (client == null) {
+            throw new RuntimeException("Training plan not found");
+        }
+        clientsResponse.setUsername(client.getUsername());
+        clientsResponse.setEmail(client.getEmail());
+        clientsResponse.setPhone(client.getPhone());
+        clientsResponse.setFirstName(client.getFirstName());
+        clientsResponse.setLastName(client.getLastName());
+        clientsResponse.setMiddleName(client.getMiddleName());
+        clientsResponse.setDateOfBirth(client.getDateOfBirth());
+        clientsResponse.setGender(client.getGender());
+        clientsResponse.setTrainingPlan(trainingPlanDTO);
+        return clientsResponse;
     }
 }
 

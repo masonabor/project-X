@@ -63,5 +63,7 @@ public class TrainingPlanService {
         return trainingPlanDTO;
     }
 
-
+    public List<TrainingPlan> findAllByCoachAndAcceptedByCoach(User coach, boolean accepted) {
+        return trainingPlanRepository.findAllByCoachAndAcceptedByCoach(coach, accepted);
+    }
 }
