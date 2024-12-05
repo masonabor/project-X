@@ -39,6 +39,13 @@ public class TrainingPlanService {
         final TrainingPlan planForStream = plan;
 
         List<Schedule> scheduleEntities = schedules.stream().map(scheduleDTO -> {
+
+            if (!scheduleDTO.isStartTimeBeforeEndTime()) {
+                throw new IllegalArgumentException(
+                        "Start time must be before end time for day: " + scheduleDTO.getDayOfWeek()
+                );
+            }
+
             Schedule schedule = new Schedule();
             schedule.setDayOfWeek(scheduleDTO.getDayOfWeek());
             schedule.setStartTime(scheduleDTO.getStartTime());
