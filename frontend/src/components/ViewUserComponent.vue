@@ -3,10 +3,10 @@
     <p>{{ error }}</p>
   </div>
   <div v-else-if="isUser">
-    <UserPageComponent />
+    <UserPageComponent></UserPageComponent>
   </div>
   <div v-else-if="isCoach">
-    <CoachComponent />
+    <CoachPageComponent></CoachPageComponent>
   </div>
   <div v-else-if="isAdmin">
     <p>Сторінка адміністратора у розробці.</p>
@@ -17,7 +17,8 @@
 import {onMounted, ref} from "vue";
 import axios from "axios";
 import UserPageComponent from "@/components/UserPageComponent.vue";
-import CoachComponent from "@/components/CoachComponent.vue";
+import CoachPageComponent from "@/components/CoachPageComponent.vue";
+
 
 const isUser = ref(false);
 const isCoach = ref(false);
@@ -28,11 +29,10 @@ onMounted(async () => {
   const token = sessionStorage.getItem("token");
 
   try {
-    const response = await axios.get("/api/user/getRole", {
+    const response = await axios.get("/api/users/getRole", {
       headers: { Authorization: `Bearer ${token}` },
     });
     const role = response.data;
-
     if (role === "ROLE_USER") isUser.value = true;
     else if (role === "ROLE_COACH") isCoach.value = true;
     else if (role === "ROLE_ADMIN") isAdmin.value = true;
