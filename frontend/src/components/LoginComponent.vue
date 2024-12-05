@@ -42,7 +42,7 @@ async function login() {
     if (!token.value) {
       message.value = "Ви не є зареєстровані"
     }
-    await router.push("/userPage")
+    await router.push("/viewPage")
   } catch (e) {
     throw HttpStatusCode.Unauthorized
   }

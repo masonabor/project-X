@@ -1,9 +1,14 @@
 <template>
   <div class="weekly-schedule">
-    <h2>Створити розклад на тиждень</h2>
+    <div v-if="trainingPlan">
+      <h2>Редагувати розклад тренувань</h2>
+    </div>
+    <div v-else>
+      <h2>Створити розклад на тиждень</h2>
+    </div>
 
     <form @submit.prevent="submitSchedule">
-      <div>
+      <div v-if="!trainingPlan">
         <label for="coach">Оберіть тренера:</label>
         <select v-model="selectedCoach" required>
           <option value="" disabled>Виберіть тренера</option>
@@ -49,6 +54,8 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
 export default {
+  computed: {
+  },
   setup() {
     const schedule = ref([
       { dayOfWeek: 'MONDAY', startTime: '', endTime: '' },
@@ -64,6 +71,7 @@ export default {
     const selectedCoach = ref('');
     const successMessage = ref('');
     const errorMessage = ref('');
+    const trainingPlan = ref(null);
 
     const fetchCoaches = async () => {
       try {
@@ -87,21 +95,28 @@ export default {
           return;
         }
 
-        const validSchedule = schedule.value.filter(
-            (item) => item.startTime && item.endTime
-        );
+        const validSchedule = schedule.value
+            .filter((item) => item.startTime && item.endTime)
+            .map((item) => ({
+              dayOfWeek: item.dayOfWeek,
+              startTime: `${item.startTime}`,
+              endTime: `${item.endTime}`,
+            }));
 
         if (validSchedule.length === 0) {
           errorMessage.value = 'Заповніть хоча б один день.';
           return;
         }
 
+        if (trainingPlan.value) {
+          selectedCoach.value = trainingPlan.value.coachId;
+        }
+
         await axios.post(
             `/api/trainingPlans/createTrainingPlan`,
-
             {
               coachId: selectedCoach.value,
-              schedules: validSchedule
+              schedules: validSchedule,
             },
             {
               headers: {
@@ -121,6 +136,28 @@ export default {
       }
     };
 
+    const getTrainingPlan = async () => {
+      try {
+        const response = await axios.get('/api/trainingPlans/getTrainingPlan', {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+          },
+        });
+
+        trainingPlan.value = response.data;
+        console.log(trainingPlan.value);
+        selectedCoach.value = trainingPlan.value.coachId;
+        console.log(selectedCoach.value);
+      } catch (error) {
+        errorMessage.value =
+            'Помилка при завантаженні тренувального плану: ' +
+            (error.response?.data?.message || error.message);
+        trainingPlan.value = { value: null };
+      }
+    };
+
+
+
     const resetForm = () => {
       schedule.value.forEach((item) => {
         item.startTime = '';
@@ -131,6 +168,7 @@ export default {
 
     onMounted(() => {
       fetchCoaches();
+      getTrainingPlan();
     });
 
     return {
@@ -140,6 +178,7 @@ export default {
       successMessage,
       errorMessage,
       submitSchedule,
+      trainingPlan
     };
   },
 };
@@ -192,4 +231,10 @@ button {
   color: red;
   margin-top: 1rem;
 }
+
+input[type="time"] {
+  font-family: "Arial", sans-serif;
+  font-size: 14px;
+}
+
 </style>
