@@ -194,6 +194,7 @@ function validateDateOfBirth() {
 function validateGender() {
   genderError.value = ""
   const validGenders = ["Чоловік", "Жінка", "Інше"]
+
   if (!validGenders.includes(gender.value)) {
     genderError.value = "Оберіть стать"
     hasErrors.value = true
@@ -278,7 +279,7 @@ async function isUserAdmin(token) {
   }
 
   try {
-    const response = await axios.get(`/api/admin/isAdmin`, {
+    const response = await axios.get(`/api/admins/isAdmin`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

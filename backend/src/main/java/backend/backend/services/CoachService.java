@@ -1,6 +1,7 @@
 package backend.backend.services;
 
 import backend.backend.dtos.ClientsResponse;
+import backend.backend.dtos.CoachResponse;
 import backend.backend.models.TrainingPlan;
 import backend.backend.models.User;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,7 @@ public class CoachService {
     private final UserService userService;
     private final TrainingPlanService trainingPlanService;
 
-    public void acceptedTrainingPlan(long userId, String username) {
+    public void acceptTrainingPlan(long userId, String username, boolean accept) {
         User user = userService.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Користувач з ID " + userId + " не знайдений."));
 
@@ -30,14 +31,15 @@ public class CoachService {
             throw new IllegalArgumentException("Тренер " + username + " не відповідає тренеру, закріпленому за цим планом.");
         }
 
-        trainingPlan.setAcceptedByCoach(true);
+        trainingPlan.setAcceptedByCoach(accept);
+        trainingPlanService.save(trainingPlan);
     }
 
-    public List<ClientsResponse> getAllClients(String username) {
+    public List<ClientsResponse> getAllClients(String username, boolean accepted) {
         User coach = userService.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Тренер з username " + username + " не знайдений."));
 
-        List<TrainingPlan> trainingPlans = trainingPlanService.findAllByCoachAndAcceptedByCoach(coach, true);
+        List<TrainingPlan> trainingPlans = trainingPlanService.findAllByCoachAndAcceptedByCoach(coach, accepted);
 
         return trainingPlans
                 .stream()
@@ -45,4 +47,17 @@ public class CoachService {
                 .toList();
     }
 
+    public CoachResponse toCoachResponse(User coach) {
+        CoachResponse coachResponse = new CoachResponse();
+        coachResponse.setUsername(coach.getUsername());
+        coachResponse.setEmail(coach.getEmail());
+        coachResponse.setPhone(coach.getPhone());
+        coachResponse.setFirstName(coach.getFirstName());
+        coachResponse.setLastName(coach.getLastName());
+        coachResponse.setMiddleName(coach.getMiddleName());
+        coachResponse.setDateOfBirth(coach.getDateOfBirth());
+        coachResponse.setGender(coachResponse.getGender());
+        coachResponse.setRole(coach.getRole().getRole());
+        return coachResponse;
+    }
 }
