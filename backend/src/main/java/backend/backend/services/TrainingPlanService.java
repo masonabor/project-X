@@ -9,6 +9,7 @@ import backend.backend.repositories.TrainingPlanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 @Service
@@ -39,7 +40,9 @@ public class TrainingPlanService {
         final TrainingPlan planForStream = plan;
 
         List<Schedule> scheduleEntities = schedules.stream().map(scheduleDTO -> {
-
+            System.out.println(scheduleDTO.getStartTime());
+            System.out.println(scheduleDTO.getEndTime());
+            System.out.println(scheduleDTO.isStartTimeBeforeEndTime());
             if (!scheduleDTO.isStartTimeBeforeEndTime()) {
                 throw new IllegalArgumentException(
                         "Start time must be before end time for day: " + scheduleDTO.getDayOfWeek()
@@ -54,6 +57,12 @@ public class TrainingPlanService {
             return schedule;
         }).toList();
 
+        List<DayOfWeek> daysOfWeeks = scheduleService.findAllDayOfWeekByTrainingPlan(planForStream);
+
+        if (!daysOfWeeks.isEmpty()) {
+            scheduleService.deleteSchedulesByDayOfWeeks(planForStream, daysOfWeeks);
+        }
+
         scheduleService.saveAll(scheduleEntities);
         plan.setCoach(coach);
         trainingPlanRepository.save(plan);
@@ -61,8 +70,10 @@ public class TrainingPlanService {
 
     public TrainingPlanDTO toDTO(TrainingPlan trainingPlan, List<Schedule> schedules) {
         TrainingPlanDTO trainingPlanDTO = new TrainingPlanDTO();
+        trainingPlanDTO.setCoachId(trainingPlan.getCoach().getId());
         trainingPlanDTO.setCoachName((trainingPlan.getCoach() == null ? null : trainingPlan.getCoach().getFirstName()));
         trainingPlanDTO.setCoachEmail((trainingPlan.getCoach() == null ? null : trainingPlan.getCoach().getEmail()));
+        trainingPlanDTO.setAcceptedByCoach(trainingPlan.isAcceptedByCoach());
         trainingPlanDTO.setSchedules(schedules
                 .stream()
                 .map(scheduleService::toDTO)
