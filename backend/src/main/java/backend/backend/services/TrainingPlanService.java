@@ -66,4 +66,8 @@ public class TrainingPlanService {
     public List<TrainingPlan> findAllByCoachAndAcceptedByCoach(User coach, boolean accepted) {
         return trainingPlanRepository.findAllByCoachAndAcceptedByCoach(coach, accepted);
     }
+
+    public void save(TrainingPlan trainingPlan) {
+        trainingPlanRepository.save(trainingPlan);
+    }
 }

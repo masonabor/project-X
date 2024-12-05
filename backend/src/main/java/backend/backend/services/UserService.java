@@ -151,6 +151,7 @@ public class UserService implements UserDetailsService {
         if (client == null) {
             throw new RuntimeException("Training plan not found");
         }
+        clientsResponse.setId(client.getId());
         clientsResponse.setUsername(client.getUsername());
         clientsResponse.setEmail(client.getEmail());
         clientsResponse.setPhone(client.getPhone());

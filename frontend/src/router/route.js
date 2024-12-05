@@ -4,6 +4,7 @@ import UserRegistrationComponent from "@/components/UserRegistrationComponent.vu
 import LoginComponent from "@/components/LoginComponent.vue";
 import DepositComponent from "@/components/DepositComponent.vue";
 import TrainingPlan from "@/components/TrainingPlan.vue";
+import HomePageComponent from "@/components/HomePageComponent.vue";
 
 export default createRouter({
     history: createWebHistory(),
@@ -11,6 +12,11 @@ export default createRouter({
         {
             path: "/",
             name: "Home",
+            component: HomePageComponent,
+        },
+        {
+            path: "/register",
+            name: "RegisterPage",
             component: UserRegistrationComponent
         },
         {

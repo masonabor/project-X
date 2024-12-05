@@ -47,7 +47,7 @@ const errorMessage = ref("");
 
 async function fetchUserData() {
   try {
-    const response = await axios.get("/api/user/profile", {
+    const response = await axios.get("/api/users/profile", {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
