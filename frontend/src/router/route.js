@@ -1,12 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import UserPageComponent from "@/components/UserPageComponent.vue"
+import UserPageComponent from "@/components/UserPageComponent.vue"
 import UserRegistrationComponent from "@/components/UserRegistrationComponent.vue"
 import LoginComponent from "@/components/LoginComponent.vue";
 import DepositComponent from "@/components/DepositComponent.vue";
-import TrainingPlanComponent from "@/components/TrainingPlanComponent.vue";
-import HomePageComponent from "@/components/HomePageComponent.vue";
-import CoachPageComponent from "@/components/CoachPageComponent.vue";
-import ViewUserPageComponent from "@/components/ViewUserPageComponent.vue";
+import TrainingPlan from "@/components/TrainingPlan.vue";
 
 export default createRouter({
     history: createWebHistory(),
@@ -14,17 +11,12 @@ export default createRouter({
         {
             path: "/",
             name: "Home",
-            component: HomePageComponent,
-        },
-        {
-            path: "/register",
-            name: "RegisterPage",
             component: UserRegistrationComponent
         },
         {
             path: "/userPage",
             name: "UserPage",
-            component: ViewUserPageComponent
+            component: UserPageComponent
         },
         {
             path: "/login",
@@ -39,12 +31,7 @@ export default createRouter({
         {
             path: "/trainingPlan",
             name: "TrainingPlanPage",
-            component: TrainingPlanComponent
-        },
-        {
-            path: "/coachPage",
-            name: "CoachPage",
-            component: CoachPageComponent
+            component: TrainingPlan
         }]
 })
 
