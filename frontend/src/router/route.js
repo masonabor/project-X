@@ -4,6 +4,11 @@ import UserRegistrationComponent from "@/components/UserRegistrationComponent.vu
 import LoginComponent from "@/components/LoginComponent.vue";
 import DepositComponent from "@/components/DepositComponent.vue";
 import TrainingPlan from "@/components/TrainingPlan.vue";
+import TablePage from '@/components/TablePage.vue';
+
+import AddUser from '@/components/AddUser.vue';
+import EditUser from '@/components/EditUser.vue';
+
 
 export default createRouter({
     history: createWebHistory(),
@@ -32,7 +37,17 @@ export default createRouter({
             path: "/trainingPlan",
             name: "TrainingPlanPage",
             component: TrainingPlan
-        }]
+        },
+        // {
+        //     path: "/table",
+        //     name: "TablePage",
+        //     component: TablePage
+        // },
+        { path: '/users', name: 'UsersTable', component: TablePage },
+        { path: '/addUser', name: 'AddUser', component: AddUser },
+        { path: '/editUser/:id', name: 'EditUser', component: EditUser },
+    ]
+
 })
 
 
