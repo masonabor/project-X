@@ -19,6 +19,9 @@ public class AdminController {
 
     @GetMapping("/isAdmin")
     public ResponseEntity<?> isAdmin(@RequestHeader("Authorization") String header) {
+        if (header.isEmpty()) {
+            return ResponseEntity.ok(false);
+        }
         String token = jwtUtil.extractTokenFromHeader(header);
         Role role = userService.getRole(jwtUtil.extractUsername(token));
         return role.getRole().equals("ROLE_ADMIN") ? ResponseEntity.ok(true) : ResponseEntity.ok(false);
