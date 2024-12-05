@@ -248,14 +248,16 @@ async function submitForm() {
   }
 
   try {
-    if (role.value === roles.value[0] && !hasErrors.value) {
+    if (!hasErrors.value) {
       const response = await axios.post("/api/auth/register", user)
       sessionStorage.setItem("token", response.data.token)
       alert("Успішна реєстрація!");
       await router.push("/login")
-    } else if (isAdmin.value && role.value === roles.value[1] && !hasErrors.value) {
+    }
+    if (isAdmin.value && role.value === roles.value[1] && !hasErrors.value) {
       await axios.post("/api/auth/registerAdmin", user, headers)
-    } else if (isAdmin.value && role.value === roles.value[2] && !hasErrors.value) {
+    }
+    if (isAdmin.value && role.value === roles.value[2] && !hasErrors.value) {
       await axios.post("/api/auth/registerCoach", user, headers)
     }
 
