@@ -19,14 +19,19 @@
             {{ schedule.dayOfWeek }}: {{ schedule.startTime }} - {{ schedule.endTime }}
           </li>
         </ul>
-        <p><strong>Тренер:</strong> {{ trainingPlan.coach || "Не призначено" }}</p>
+        <p v-if="!trainingPlan.acceptedByCoach"><strong>Тренер:</strong> {{ "Не призначено" }}</p>
+        <div v-if="trainingPlan.acceptedByCoach">
+          <p><strong>Тренер:</strong> {{ trainingPlan.coachName }}</p>
+          <p><strong>Пошта тренера:</strong> {{ trainingPlan.coachEmail}}</p>
+        </div>
       </div>
 
       <div class="actions">
         <button @click="editUserInfo" class="btn">Редагувати інформацію</button>
         <button @click="changePassword" class="btn">Змінити пароль</button>
         <button @click="deposit" class="btn">Поповнити рахунок</button>
-        <button @click="createSchedule" class="btn">Створити розклад</button>
+        <button @click="createSchedule" class="btn" v-if="!trainingPlan">Створити розклад</button>
+        <button @click="createSchedule" class="btn" v-if="trainingPlan">Редагувати розклад</button>
       </div>
     </div>
 
@@ -69,10 +74,10 @@ async function fetchUserData() {
 
     trainingPlan.value = {
       ...trainingResponse.data,
-      trainingPlan: trainingResponse.data.trainingPlan,
+      coachEmail: trainingResponse.data.coachEmail,
+      coachName: trainingResponse.data.coachName,
+      acceptedByCoach: trainingResponse.data.acceptedByCoach,
     }
-
-    trainingPlan.value.coach = trainingResponse.data.coach;
   } catch (error) {
     errorMessage.value = "Не вдалося завантажити дані користувача.";
     console.error(error);

@@ -1,5 +1,6 @@
 package backend.backend.dtos;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -17,4 +18,12 @@ public class ScheduleDTO {
 
     @NotNull(message = "End time is required")
     private LocalTime endTime;
+
+    @AssertTrue(message = "Start time must be before end time")
+    public boolean isStartTimeBeforeEndTime() {
+        if (startTime == null || endTime == null) {
+            return true;
+        }
+        return startTime.isBefore(endTime);
+    }
 }
