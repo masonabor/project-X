@@ -3,13 +3,16 @@
     <p>{{ error }}</p>
   </div>
   <div v-else-if="isUser">
-    <UserPageComponent></UserPageComponent>
+    <UserPageComponent/>
   </div>
   <div v-else-if="isCoach">
-    <CoachPageComponent></CoachPageComponent>
+    <CoachPageComponent/>
   </div>
   <div v-else-if="isAdmin">
-    <p>Сторінка адміністратора у розробці.</p>
+    <AdminPageComponent/>
+  </div>
+  <div v-else>
+    {{ login }}
   </div>
 </template>
 
@@ -18,7 +21,8 @@ import {onMounted, ref} from "vue";
 import axios from "axios";
 import UserPageComponent from "@/components/UserPageComponent.vue";
 import CoachPageComponent from "@/components/CoachPageComponent.vue";
-
+import AdminPageComponent from "@/components/AdminPageComponent.vue";
+import router from "@/router/route";
 
 const isUser = ref(false);
 const isCoach = ref(false);
@@ -40,4 +44,8 @@ onMounted(async () => {
     error.value = "Не вдалося завантажити роль користувача.";
   }
 });
+
+const login = async () => {
+  await router.push('/login')
+}
 </script>

@@ -119,7 +119,9 @@ async function fetchCoachData() {
 }
 
 function viewClientInfo(clientId) {
-  router.push({ name: "ClientInfo", params: { clientId } });
+  router.push({ name: "UserInfoPage", params: {
+    id: clientId
+    } });
 }
 
 async function acceptClient(clientId, accept) {
@@ -150,5 +152,3 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-</style>

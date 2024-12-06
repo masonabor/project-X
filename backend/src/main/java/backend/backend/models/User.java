@@ -1,7 +1,10 @@
 package backend.backend.models;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.DialectOverride;
+
 import java.util.Date;
 
 @Data
@@ -42,7 +45,7 @@ public class User {
     @Column(name = "gender", length = 50, nullable = false)
     private String gender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
@@ -53,5 +56,8 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "training_plan_id")
     private TrainingPlan trainingPlan;
+
+    @Column(name = "banned")
+    private boolean banned = false;
 
 }

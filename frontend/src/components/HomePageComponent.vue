@@ -1,11 +1,10 @@
 <template>
   <div>
-    <!-- Video Section -->
+
     <section id="video">
       <video src="../public/videos/testosterone_boost.mp4" autoplay loop muted></video>
     </section>
 
-    <!-- Our Clients Section -->
     <section class="our-clients">
       <div class="our-clients-container">
         <h2 style="text-align: center;">Наші клієнти</h2>
@@ -24,7 +23,6 @@
       </div>
     </section>
 
-    <!-- Our Services Section -->
     <section id="our-services">
       <h2>Наші послуги</h2>
       <h1>Популярні послуги</h1>
@@ -50,7 +48,6 @@
       </div>
     </section>
 
-    <!-- About Us Section -->
     <section id="about-us">
       <div class="container">
         <aside id="map" style="flex: 1;">

@@ -49,6 +49,7 @@ public class CoachService {
 
     public CoachResponse toCoachResponse(User coach) {
         CoachResponse coachResponse = new CoachResponse();
+        coachResponse.setId(coach.getId());
         coachResponse.setUsername(coach.getUsername());
         coachResponse.setEmail(coach.getEmail());
         coachResponse.setPhone(coach.getPhone());
@@ -59,5 +60,10 @@ public class CoachService {
         coachResponse.setGender(coachResponse.getGender());
         coachResponse.setRole(coach.getRole().getRole());
         return coachResponse;
+    }
+
+    public List<CoachResponse> findAllCoaches() {
+        return userService.findAllByRole("ROLE_COACH").stream()
+                .map(this::toCoachResponse).toList();
     }
 }
