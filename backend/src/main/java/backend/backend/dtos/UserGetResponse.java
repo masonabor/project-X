@@ -1,11 +1,11 @@
 package backend.backend.dtos;
 
 import lombok.Data;
-
 import java.util.Date;
+import java.util.List;
 
 @Data
-public class CoachResponse {
+public class UserGetResponse {
     private long id;
     private String username;
     private String email;
@@ -15,5 +15,11 @@ public class CoachResponse {
     private String middleName;
     private Date dateOfBirth;
     private String gender;
+    private boolean banned;
+    private long accountNumber;
+    private String coachName;
+    private String coachLastName;
+    private String coachPhone;
+    private List<ScheduleDTO> schedules;
     private String role;
 }

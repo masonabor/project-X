@@ -21,8 +21,7 @@ import bicycleImage from "@/public/img/bicycle.png";
           <div class="dropdown-child">
             <router-link to="/">Головна</router-link>
             <router-link to="/login">Авторизація</router-link>
-            <a href="">Калькулятор</a>
-            <a href="">Питання та відповіді</a>
+            <router-link to="/register">Реєстрація</router-link>
           </div>
           <div class="hamburger-icon">
             <button class="hamburger">☰</button>
@@ -30,9 +29,7 @@ import bicycleImage from "@/public/img/bicycle.png";
         </div>
       </div>
     </header>
-    <main>
-      <router-view></router-view>
-    </main>
+    <router-view></router-view>
     <footer>
       <div class="footer-content">
         <p>Будьте з нами на зв'язку</p>
@@ -59,6 +56,4 @@ import bicycleImage from "@/public/img/bicycle.png";
   </div>
 </template>
 
-<style src="@/public/css/registration.css"></style>
 <style src="@/public/css/hoverFooter.css"></style>
-<style src="@/public/css/authorizationAndRegistrationStyles.css"></style>

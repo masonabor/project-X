@@ -1,52 +1,54 @@
 <template>
-  <div class="weekly-schedule">
-    <div v-if="trainingPlan">
-      <h2>Редагувати розклад тренувань</h2>
-    </div>
-    <div v-else>
-      <h2>Створити розклад на тиждень</h2>
-    </div>
-
-    <form @submit.prevent="submitSchedule">
-      <div v-if="!trainingPlan">
-        <label for="coach">Оберіть тренера:</label>
-        <select v-model="selectedCoach" required>
-          <option value="" disabled>Виберіть тренера</option>
-          <option v-for="coach in coaches" :key="coach.id" :value="coach.id">
-            {{ coach.lastName }} {{ coach.firstName}}
-          </option>
-        </select>
+  <main>
+    <div class="weekly-schedule">
+      <div v-if="hasCoach">
+        <h2>Редагувати розклад тренувань</h2>
+      </div>
+      <div v-else>
+        <h2>Створити розклад на тиждень</h2>
       </div>
 
-      <div v-for="(day, index) in schedule" :key="index" class="schedule-item">
-        <div>
-          <label>{{ day.dayOfWeek }}</label>
+      <form @submit.prevent="submitSchedule">
+        <div v-if="!hasCoach">
+          <label for="coach">Оберіть тренера:</label>
+          <select v-model="selectedCoach" required>
+            <option value="" disabled>Виберіть тренера</option>
+            <option v-for="coach in coaches" :key="coach.id" :value="coach.id">
+              {{ coach.lastName }} {{ coach.firstName}}
+            </option>
+          </select>
         </div>
 
-        <div>
-          <label for="start-time">Час початку:</label>
-          <input type="time" v-model="day.startTime" />
+        <div v-for="(day, index) in schedule" :key="index" class="schedule-item">
+          <div>
+            <label>{{ day.dayOfWeek }}</label>
+          </div>
+
+          <div>
+            <label for="start-time">Час початку:</label>
+            <input type="time" v-model="day.startTime" />
+          </div>
+
+          <div>
+            <label for="end-time">Час закінчення:</label>
+            <input type="time" v-model="day.endTime" />
+          </div>
         </div>
 
-        <div>
-          <label for="end-time">Час закінчення:</label>
-          <input type="time" v-model="day.endTime" />
-        </div>
+        <button type="submit" class="submit-btn">
+          Зберегти розклад
+        </button>
+      </form>
+
+      <div v-if="successMessage" class="success-message">
+        {{ successMessage }}
       </div>
 
-      <button type="submit" class="submit-btn">
-        Зберегти розклад
-      </button>
-    </form>
-
-    <div v-if="successMessage" class="success-message">
-      {{ successMessage }}
+      <div v-if="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
     </div>
-
-    <div v-if="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -72,10 +74,11 @@ export default {
     const successMessage = ref('');
     const errorMessage = ref('');
     const trainingPlan = ref(null);
+    const hasCoach = ref(false);
 
     const fetchCoaches = async () => {
       try {
-        const response = await axios.get('/api/coaches/getCoachesByDTO', {
+        const response = await axios.get('/api/coaches/getCoaches', {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem('token')}`,
           },
@@ -108,7 +111,7 @@ export default {
           return;
         }
 
-        if (trainingPlan.value) {
+        if (trainingPlan.value.coachId !== 0) {
           selectedCoach.value = trainingPlan.value.coachId;
         }
 
@@ -145,9 +148,12 @@ export default {
         });
 
         trainingPlan.value = response.data;
-        console.log(trainingPlan.value);
-        selectedCoach.value = trainingPlan.value.coachId;
-        console.log(selectedCoach.value);
+
+        if (trainingPlan.value.coachId !== 0) {
+          selectedCoach.value = trainingPlan.value.coachId;
+          hasCoach.value = true;
+        }
+
       } catch (error) {
         errorMessage.value =
             'Помилка при завантаженні тренувального плану: ' +
@@ -178,63 +184,121 @@ export default {
       successMessage,
       errorMessage,
       submitSchedule,
-      trainingPlan
+      trainingPlan,
+      hasCoach
     };
   },
 };
 </script>
 
 <style scoped>
+
+
 .weekly-schedule {
-  max-width: 600px;
-  margin: auto;
+  max-width: 2400px; /* Збільшена ширина */
+  margin: 2rem auto;
+  background: #f5f5f5;
+  border-radius: 15px; /* Закруглення країв */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  background: #333;
+  color: #fff;
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.8rem;
+  border-radius: 15px 15px 0 0; /* Закруглення тільки верхніх країв */
+  margin-bottom: 1rem; /* Відступ між заголовком і таблицею */
+}
+
+form {
+  padding: 1.5rem;
+}
+
+form > div {
+  margin-bottom: 1rem;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+select,
+input[type="time"] {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #fff;
+  font-size: 1rem;
+  color: #333;
 }
 
 .schedule-item {
-  margin-bottom: 1rem;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
   align-items: center;
-}
-
-label {
-  display: block;
-  font-weight: bold;
-}
-
-input,
-select {
   padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+}
+
+.schedule-item:nth-child(even) {
+  background: #e0e0e0; /* Світло-сірий фон для парних рядків */
+}
+
+.schedule-item:nth-child(odd) {
+  background: #fff; /* Білий фон для непарних рядків */
 }
 
 button {
-  padding: 0.5rem 1rem;
+  display: block;
+  width: 100%;
+  padding: 1rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
+  background: #c41717;
+  color: #fff;
+  font-size: 1.2rem;
   cursor: pointer;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
-.submit-btn {
-  background-color: #007bff;
-  color: white;
+button:hover {
+  background-color: #a10f0f;
+}
+
+
+.success-message,
+.error-message {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
 }
 
 .success-message {
-  color: green;
-  margin-top: 1rem;
+  background-color: #4caf50;
+  color: #fff;
 }
 
 .error-message {
-  color: red;
-  margin-top: 1rem;
+  background-color: #f44336;
+  color: #fff;
 }
 
-input[type="time"] {
-  font-family: "Arial", sans-serif;
-  font-size: 14px;
-}
+
 
 </style>
+
+
+

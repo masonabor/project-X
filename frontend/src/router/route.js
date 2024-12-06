@@ -6,6 +6,8 @@ import TrainingPlanComponent from "@/components/TrainingPlanComponent.vue";
 import HomePageComponent from "@/components/HomePageComponent.vue";
 import CoachPageComponent from "@/components/CoachPageComponent.vue";
 import ViewUserComponent from "@/components/ViewUserComponent.vue";
+import AdminPageComponent from "@/components/AdminPageComponent.vue";
+import UserInfoComponent from "@/components/UserInfoComponent.vue";
 
 export default createRouter({
     history: createWebHistory(),
@@ -44,6 +46,16 @@ export default createRouter({
             path: "/viewPage",
             name: "ViewUserPage",
             component: ViewUserComponent
+        },
+        {
+            path: "/adminPage",
+            name: "AdminPage",
+            component: AdminPageComponent
+        },
+        {
+            path: '/userInfo/:id',
+            name: "UserInfoPage",
+            component: UserInfoComponent
         }]
 })
 

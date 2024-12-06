@@ -1,6 +1,6 @@
 package backend.backend.controllers;
 
-import backend.backend.dtos.CoachDTO;
+import backend.backend.dtos.CoachResponse;
 import backend.backend.jwt.JwtUtil;
 import backend.backend.models.User;
 import backend.backend.services.CoachService;
@@ -27,7 +27,7 @@ public class CoachController {
     public ResponseEntity<?> getCoaches() {
         log.info("Отримання списку тренерів...");
         try {
-            List<CoachDTO> coaches = userService.findCoaches();
+            List<CoachResponse> coaches = coachService.findAllCoaches();
             if (coaches.isEmpty()) {
                 return ResponseEntity.noContent().build();
             }
@@ -35,17 +35,6 @@ public class CoachController {
         } catch (Exception e) {
             log.error("Помилка під час отримання тренерів: ", e);
             return ResponseEntity.status(500).body("Помилка на сервері");
-        }
-    }
-
-    @GetMapping("/getCoachesByDTO")
-    public ResponseEntity<List<CoachDTO>> getCoachesByDTO() {
-        log.info("Отримання списку тренерів (id, lastName, firstName)...");
-        try {
-            return ResponseEntity.ok(userService.findCoaches());
-        } catch (Exception e) {
-            log.error("Помилка під час отримання тренерів: ", e);
-            return ResponseEntity.status(500).body(null);
         }
     }
 
@@ -85,6 +74,19 @@ public class CoachController {
         }
     }
 
+    @GetMapping("/getClients/{id}")
+    public ResponseEntity<?> getCoachClients(@PathVariable("id") long id) {
+
+        try {
+            User coach = userService.findById(id).orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+            log.info("Клієнтів тренера: {}", coach.getUsername());
+            return ResponseEntity.ok(coachService.getAllClients(coach.getUsername(), true));
+        } catch (Error e) {
+            log.error("Помилка при отриманні");
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+    }
+
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(@RequestHeader("Authorization") String header) {
         try {
@@ -99,29 +101,15 @@ public class CoachController {
         }
     }
 
-
-
-    @PostMapping("/add")
-    public ResponseEntity<?> addCoach(@RequestBody CoachDTO coachDTO) {
-        log.info("Додавання тренера: {}", coachDTO);
+    @GetMapping("/checkCoachInfo/{id}")
+    public ResponseEntity<?> getProfile(@PathVariable long id) {
         try {
-            coachService.addCoach(coachDTO);
-            log.info("Тренера успішно додано.");
-            return ResponseEntity.ok("Тренера успішно додано.");
+            User coach = userService.findById(id).orElseThrow(() -> new IllegalArgumentException("Тренера не знайдено"));
+            log.info("Інформації тренера {}" , coach.getUsername());
+            return ResponseEntity.ok(coachService.toCoachResponse(coach));
         } catch (Exception e) {
-            log.error("Помилка при додаванні тренера: {}", e.getMessage());
-            return ResponseEntity.status(500).body("Помилка при додаванні тренера.");
-        }
-    }
-
-    @PutMapping("/update/{coachId}")
-    public ResponseEntity<?> updateCoach(@PathVariable Long coachId, @RequestBody CoachDTO coachDTO) {
-        try {
-            coachService.updateCoach(coachId, coachDTO);
-            return ResponseEntity.ok("Інформацію про тренера успішно оновлено.");
-        } catch (Exception e) {
-            log.error("Помилка при оновленні тренера: {}", e.getMessage());
-            return ResponseEntity.status(500).body("Помилка при оновленні тренера.");
+            log.error("Помилка при отриманні інформації про тренера", e);
+            return ResponseEntity.status(500).body(e.getMessage());
         }
     }
 

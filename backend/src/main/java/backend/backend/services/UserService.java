@@ -164,11 +164,24 @@ public class UserService implements UserDetailsService {
         return clientsResponse;
     }
 
+    @Transactional
+    public void deleteUser(long id) {
+        userRepository.delete(findById(id).orElseThrow(() -> new RuntimeException("User not found")));
+    }
 
-
-
-    public void save(User user) {
+    @Transactional
+    public void banUser(long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setBanned(true);
         userRepository.save(user);
     }
+
+    @Transactional
+    public void unbanUser(long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setBanned(false);
+        userRepository.save(user);
+    }
+
 }
 

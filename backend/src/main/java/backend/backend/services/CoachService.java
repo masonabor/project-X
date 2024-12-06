@@ -8,17 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-import backend.backend.dtos.CoachDTO;
-import backend.backend.repositories.RoleRepository;
-
-
-
-
 @Service
 @RequiredArgsConstructor
 public class CoachService {
-
-    private final RoleRepository roleRepository;
 
     private final UserService userService;
     private final TrainingPlanService trainingPlanService;
@@ -57,6 +49,7 @@ public class CoachService {
 
     public CoachResponse toCoachResponse(User coach) {
         CoachResponse coachResponse = new CoachResponse();
+        coachResponse.setId(coach.getId());
         coachResponse.setUsername(coach.getUsername());
         coachResponse.setEmail(coach.getEmail());
         coachResponse.setPhone(coach.getPhone());
@@ -69,26 +62,8 @@ public class CoachService {
         return coachResponse;
     }
 
-
-
-    public void addCoach(CoachDTO coachDTO) {
-        User coach = new User();
-        coach.setUsername(coachDTO.getFirstName().toLowerCase() + "." + coachDTO.getLastName().toLowerCase());
-        coach.setFirstName(coachDTO.getFirstName());
-        coach.setLastName(coachDTO.getLastName());
-        coach.setRole(roleRepository.findByRole("ROLE_COACH")
-                .orElseThrow(() -> new IllegalArgumentException("Роль 'ROLE_COACH' не знайдена")));
-        userService.save(coach);
-
+    public List<CoachResponse> findAllCoaches() {
+        return userService.findAllByRole("ROLE_COACH").stream()
+                .map(this::toCoachResponse).toList();
     }
-
-    public void updateCoach(Long coachId, CoachDTO coachDTO) {
-        User coach = userService.findById(coachId)
-                .orElseThrow(() -> new IllegalArgumentException("Тренера з ID " + coachId + " не знайдено."));
-
-        coach.setFirstName(coachDTO.getFirstName());
-        coach.setLastName(coachDTO.getLastName());
-        userService.save(coach);
-    }
-
 }

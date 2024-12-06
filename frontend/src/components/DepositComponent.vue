@@ -1,27 +1,29 @@
 <template>
-  <div class="replenish-account">
-    <h2>Поповнення рахунку</h2>
-    <form @submit.prevent="submitForm">
-      <div class="input-group">
-        <label for="amount">Сума поповнення (грн)</label>
-        <input
-            type="number"
-            id="amount"
-            v-model.number="amount"
-            placeholder="Введіть суму"
-            min="1"
-            step="0.01"
-        />
-        <span v-if="amountError" class="error-message">{{ amountError }}</span>
-      </div>
-      <button type="submit" class="btn" :disabled="isLoading">
-        {{ isLoading ? "Поповнення..." : "Поповнити" }}
-      </button>
-    </form>
+  <main>
+    <div class="replenish-account">
+      <h2>Поповнення рахунку</h2>
+      <form @submit.prevent="submitForm">
+        <div class="input-group">
+          <label for="amount">Сума поповнення (грн)</label>
+          <input
+              type="number"
+              id="amount"
+              v-model.number="amount"
+              placeholder="Введіть суму"
+              min="1"
+              step="0.01"
+          />
+          <span v-if="amountError" class="error-message">{{ amountError }}</span>
+        </div>
+        <button type="submit" class="btn" :disabled="isLoading">
+          {{ isLoading ? "Поповнення..." : "Поповнити" }}
+        </button>
+      </form>
 
-    <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
-    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-  </div>
+      <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
+      <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+    </div>
+  </main>
 </template>
 
 <script setup>
@@ -77,7 +79,7 @@ async function submitForm() {
 </script>
 
 <style scoped>
-.replenish-account {
+.time-input-form {
   max-width: 400px;
   margin: auto;
   padding: 20px;
@@ -103,27 +105,38 @@ input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 16px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 .btn {
   display: block;
   width: 100%;
   padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
+  background-color: #c41717; /* Червоний колір */
+  color: white; /* Білий текст */
   border: none;
-  border-radius: 4px;
+  border-radius: 20px; /* Заокруглені краї */
   cursor: pointer;
   font-size: 16px;
+  font-weight: bold; /* Жирний текст */
+  text-align: center;
+  transition: background-color 0.3s ease; /* Анімація зміни кольору */
 }
 
 .btn:disabled {
-  background-color: #7abaff;
+  background-color: #f19999; /* Світло-червоний для неактивної кнопки */
   cursor: not-allowed;
 }
 
 .btn:hover {
-  background-color: #0056b3;
+  background-color: #a10f0f; /* Темніший червоний при наведенні */
 }
 
 .success-message {
@@ -132,7 +145,7 @@ input {
 }
 
 .error-message {
-  margin-top: 20px;
+  margin-top: 10px;
   color: red;
   font-size: 14px;
 }

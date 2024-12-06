@@ -1,4 +1,5 @@
 <template>
+  <main>
   <div v-if="!isCoach">Ви не є тренером</div>
   <div v-if="isCoach">
     <div class="coach-page">
@@ -71,6 +72,7 @@
       </div>
     </div>
   </div>
+  </main>
 </template>
 
 <script setup>
@@ -119,7 +121,9 @@ async function fetchCoachData() {
 }
 
 function viewClientInfo(clientId) {
-  router.push({ name: "ClientInfo", params: { clientId } });
+  router.push({ name: "UserInfoPage", params: {
+    id: clientId
+    } });
 }
 
 async function acceptClient(clientId, accept) {
@@ -150,5 +154,3 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-</style>
