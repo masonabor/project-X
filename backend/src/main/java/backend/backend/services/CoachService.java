@@ -8,9 +8,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+import backend.backend.dtos.CoachDTO;
+import backend.backend.repositories.RoleRepository;
+
+
+
+
 @Service
 @RequiredArgsConstructor
 public class CoachService {
+
+    private final RoleRepository roleRepository;
 
     private final UserService userService;
     private final TrainingPlanService trainingPlanService;
@@ -60,4 +68,27 @@ public class CoachService {
         coachResponse.setRole(coach.getRole().getRole());
         return coachResponse;
     }
+
+
+
+    public void addCoach(CoachDTO coachDTO) {
+        User coach = new User();
+        coach.setUsername(coachDTO.getFirstName().toLowerCase() + "." + coachDTO.getLastName().toLowerCase());
+        coach.setFirstName(coachDTO.getFirstName());
+        coach.setLastName(coachDTO.getLastName());
+        coach.setRole(roleRepository.findByRole("ROLE_COACH")
+                .orElseThrow(() -> new IllegalArgumentException("Роль 'ROLE_COACH' не знайдена")));
+        userService.save(coach);
+
+    }
+
+    public void updateCoach(Long coachId, CoachDTO coachDTO) {
+        User coach = userService.findById(coachId)
+                .orElseThrow(() -> new IllegalArgumentException("Тренера з ID " + coachId + " не знайдено."));
+
+        coach.setFirstName(coachDTO.getFirstName());
+        coach.setLastName(coachDTO.getLastName());
+        userService.save(coach);
+    }
+
 }

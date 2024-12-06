@@ -163,5 +163,12 @@ public class UserService implements UserDetailsService {
         clientsResponse.setTrainingPlan(trainingPlanDTO);
         return clientsResponse;
     }
+
+
+
+
+    public void save(User user) {
+        userRepository.save(user);
+    }
 }
 

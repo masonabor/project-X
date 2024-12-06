@@ -3,8 +3,12 @@ import UserPageComponent from "@/components/UserPageComponent.vue"
 import UserRegistrationComponent from "@/components/UserRegistrationComponent.vue"
 import LoginComponent from "@/components/LoginComponent.vue";
 import DepositComponent from "@/components/DepositComponent.vue";
-import TrainingPlan from "@/components/TrainingPlan.vue";
+// import TrainingPlan from "@/components/TrainingPlan.vue";
 import HomePageComponent from "@/components/HomePageComponent.vue";
+// import TrainingPlanComponent from "@/components/TrainingPlanComponent.vue";
+
+
+import TablePage from '@/components/TablePage.vue';
 
 export default createRouter({
     history: createWebHistory(),
@@ -34,11 +38,17 @@ export default createRouter({
             name: "DepositPage",
             component: DepositComponent
         },
-        {
-            path: "/trainingPlan",
-            name: "TrainingPlanPage",
-            component: TrainingPlan
-        }]
+        // {
+        //     path: "/trainingPlan",
+        //     name: "TrainingPlanPage",
+        //     component: TrainingPlanComponent
+        // }
+
+        { path: '/users', name: 'UsersTable', component: TablePage },
+
+
+
+        ]
 })
 
 

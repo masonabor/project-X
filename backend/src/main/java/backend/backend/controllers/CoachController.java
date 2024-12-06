@@ -98,4 +98,31 @@ public class CoachController {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
+
+
+
+    @PostMapping("/add")
+    public ResponseEntity<?> addCoach(@RequestBody CoachDTO coachDTO) {
+        log.info("Додавання тренера: {}", coachDTO);
+        try {
+            coachService.addCoach(coachDTO);
+            log.info("Тренера успішно додано.");
+            return ResponseEntity.ok("Тренера успішно додано.");
+        } catch (Exception e) {
+            log.error("Помилка при додаванні тренера: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Помилка при додаванні тренера.");
+        }
+    }
+
+    @PutMapping("/update/{coachId}")
+    public ResponseEntity<?> updateCoach(@PathVariable Long coachId, @RequestBody CoachDTO coachDTO) {
+        try {
+            coachService.updateCoach(coachId, coachDTO);
+            return ResponseEntity.ok("Інформацію про тренера успішно оновлено.");
+        } catch (Exception e) {
+            log.error("Помилка при оновленні тренера: {}", e.getMessage());
+            return ResponseEntity.status(500).body("Помилка при оновленні тренера.");
+        }
+    }
+
 }
