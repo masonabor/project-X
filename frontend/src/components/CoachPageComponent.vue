@@ -1,4 +1,5 @@
 <template>
+  <main>
   <div v-if="!isCoach">Ви не є тренером</div>
   <div v-if="isCoach">
     <div class="coach-page">
@@ -71,6 +72,7 @@
       </div>
     </div>
   </div>
+  </main>
 </template>
 
 <script setup>

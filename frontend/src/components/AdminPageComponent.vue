@@ -1,61 +1,63 @@
 <template>
-  <div v-if="isAdmin">
-    <div class="admin-dashboard">
-      <h1>Адміністративна панель</h1>
+  <main>
+    <div v-if="isAdmin">
+      <div class="admin-dashboard">
+        <h1>Адміністративна панель</h1>
 
-      <h2>Користувачі</h2>
-      <table>
-        <thead>
-        <tr>
-          <th>Ім'я користувача</th>
-          <th>Email</th>
-          <th>Телефон</th>
-          <th>Дії</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="user in users" :key="user.id">
-          <td>{{ user.username }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.phone }}</td>
-          <td>
-            <button @click="viewUserDetails(user.id)">Переглянути</button>
-            <button v-if="user.banned" @click="unbanUser(user.id)">Розблокувати</button>
-            <button v-else @click="banUser(user.id)">Заблокувати</button>
-            <button @click="deleteUser(user.id)">Видалити</button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+        <h2>Користувачі</h2>
+        <table>
+          <thead>
+          <tr>
+            <th>Ім'я користувача</th>
+            <th>Email</th>
+            <th>Телефон</th>
+            <th>Дії</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="user in users" :key="user.id">
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone }}</td>
+            <td>
+              <button @click="viewUserDetails(user.id)">Переглянути</button>
+              <button v-if="user.banned" @click="unbanUser(user.id)">Розблокувати</button>
+              <button v-else @click="banUser(user.id)">Заблокувати</button>
+              <button @click="deleteUser(user.id)">Видалити</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
 
-      <h2>Тренери</h2>
-      <table>
-        <thead>
-        <tr>
-          <th>Ім'я користувача</th>
-          <th>Email</th>
-          <th>Телефон</th>
-          <th>Дії</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="coach in coaches" :key="coach.username">
-          <td>{{ coach.username }}</td>
-          <td>{{ coach.email }}</td>
-          <td>{{ coach.phone }}</td>
-          <td>
-            <button @click="viewUserDetails(coach.id)">Переглянути</button>
-            <button @click="deleteUser(coach.id)">Видалити</button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <button @click="createUser">Створити користувача</button>
+        <h2>Тренери</h2>
+        <table>
+          <thead>
+          <tr>
+            <th>Ім'я користувача</th>
+            <th>Email</th>
+            <th>Телефон</th>
+            <th>Дії</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="coach in coaches" :key="coach.username">
+            <td>{{ coach.username }}</td>
+            <td>{{ coach.email }}</td>
+            <td>{{ coach.phone }}</td>
+            <td>
+              <button @click="viewUserDetails(coach.id)">Переглянути</button>
+              <button @click="deleteUser(coach.id)">Видалити</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <button @click="createUser">Створити користувача</button>
+      </div>
     </div>
-  </div>
-  <div v-else>
-    Ви не є адміністратором
-  </div>
+    <div  v-else class="not-admin-box">
+      Ви не є адміністратором
+    </div>
+  </main>
 </template>
 
 <script setup>
@@ -177,6 +179,21 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
+.not-admin-box {
+  border: 4px solid #ff4d4d; /* Більш товста рамка */
+  border-radius: 16px; /* Згладжені кути */
+  padding: 40px; /* Більші відступи всередині рамки */
+  background-color: #ffe6e6; /* Легкий червоний фон */
+  color: #b30000; /* Темний текст для контрасту */
+  font-family: Arial, sans-serif; /* Шрифт */
+  font-size: 24px; /* Збільшений розмір тексту */
+  text-align: center; /* Центрування тексту */
+  max-width: 600px; /* Більша ширина */
+  margin: 40px auto; /* Відцентрування по горизонталі з великим відступом */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Більш глибока тінь */
+}
+
 .admin-dashboard {
   max-width: 900px;
   margin: 0 auto;

@@ -70,7 +70,7 @@ public class TrainingPlanService {
 
     public TrainingPlanDTO toDTO(TrainingPlan trainingPlan, List<Schedule> schedules) {
         TrainingPlanDTO trainingPlanDTO = new TrainingPlanDTO();
-        trainingPlanDTO.setCoachId(trainingPlan.getCoach().getId());
+        trainingPlanDTO.setCoachId(trainingPlan.getCoach() == null ? 0 : trainingPlan.getCoach().getId());
         trainingPlanDTO.setCoachName((trainingPlan.getCoach() == null ? null : trainingPlan.getCoach().getFirstName()));
         trainingPlanDTO.setCoachEmail((trainingPlan.getCoach() == null ? null : trainingPlan.getCoach().getEmail()));
         trainingPlanDTO.setAcceptedByCoach(trainingPlan.isAcceptedByCoach());

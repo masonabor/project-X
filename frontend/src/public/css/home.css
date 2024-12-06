@@ -69,7 +69,6 @@ video {
     max-width: 800px; /* You can limit the width */
     margin: 0 auto; /* Center the slider */
     overflow: hidden;
-    padding-left: 15px;
 }
 
 .swiper-navigation {

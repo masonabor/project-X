@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,7 +58,7 @@ public class AuthController {
                     loginRequest.getPassword()
             ));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new JwtError(HttpStatus.UNAUTHORIZED.value(), "Некоректний логін або пароль"), HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(401).body("Користувача не знайдено");
         }
         UserDetails userDetails = userService.loadUserByUsername(loginRequest.getUsername());
         String token = jwtUtil.generateToken(userDetails);

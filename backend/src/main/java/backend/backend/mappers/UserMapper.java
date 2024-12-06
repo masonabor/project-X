@@ -23,9 +23,17 @@ public class UserMapper {
         dto.setDateOfBirth(user.getDateOfBirth());
         dto.setGender(user.getGender());
         dto.setAccountNumber(user.getAccount() == null ? 0 : user.getAccount().getAccountNumber());
-        dto.setCoachName(user.getTrainingPlan() == null ? "" : user.getTrainingPlan().getCoach().getFirstName());
-        dto.setCoachLastName(user.getTrainingPlan() == null ? "" : user.getTrainingPlan().getCoach().getLastName());
-        dto.setCoachPhone(user.getTrainingPlan() == null ? "" : user.getTrainingPlan().getCoach().getPhone());
+
+        if (user.getTrainingPlan() == null) {
+            dto.setCoachName("");
+            dto.setCoachLastName("");
+            dto.setCoachPhone("");
+        } else {
+            dto.setCoachName(user.getTrainingPlan().getCoach() == null ? "" : user.getTrainingPlan().getCoach().getFirstName());
+            dto.setCoachLastName(user.getTrainingPlan().getCoach() == null ? "" : user.getTrainingPlan().getCoach().getLastName());
+            dto.setCoachPhone(user.getTrainingPlan().getCoach() == null ? "" : user.getTrainingPlan().getCoach().getPhone());
+        }
+
         dto.setBanned(user.isBanned());
         dto.setRole(user.getRole().getRole());
 

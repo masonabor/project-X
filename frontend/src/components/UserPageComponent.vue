@@ -1,4 +1,5 @@
 <template>
+  <main>
   <div class="user-page">
     <h1>Особистий кабінет</h1>
 
@@ -27,8 +28,6 @@
       </div>
 
       <div class="actions">
-        <button @click="editUserInfo" class="btn">Редагувати інформацію</button>
-        <button @click="changePassword" class="btn">Змінити пароль</button>
         <button @click="deposit" class="btn">Поповнити рахунок</button>
         <button @click="createSchedule" class="btn" v-if="!trainingPlan">Створити розклад</button>
         <button @click="createSchedule" class="btn" v-if="trainingPlan">Редагувати розклад</button>
@@ -39,6 +38,7 @@
       <p>{{ errorMessage }}</p>
     </div>
   </div>
+  </main>
 </template>
 
 <script setup>
@@ -89,14 +89,6 @@ function formatDate(date) {
   return new Date(date).toLocaleDateString("uk-UA");
 }
 
-function editUserInfo() {
-  router.push({ name: "EditUserInfo" });
-}
-
-function changePassword() {
-  router.push({ name: "ChangePassword" });
-}
-
 async function deposit() {
   await router.push("/deposit");
 }
@@ -137,7 +129,7 @@ onMounted(() => {
   display: inline-block;
   margin-right: 10px;
   padding: 10px 15px;
-  background-color: #007bff;
+  background-color: #e60d2e;
   color: white;
   border: none;
   border-radius: 4px;
@@ -145,7 +137,7 @@ onMounted(() => {
 }
 
 .actions .btn:hover {
-  background-color: #0056b3;
+  background-color: #ff4b5c;
 }
 
 .error {
